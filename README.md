@@ -1,6 +1,6 @@
 # Final-Project
 
-####My team is:
+#### My team is:
 1. Leonaldo Pasaribu
 2. Leni Maya Sihombing
 #
