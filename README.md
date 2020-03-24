@@ -1,7 +1,6 @@
 # Final-Project
-Measuring soil pH and moisture, and air humidity and temperature using raspberry pi 3.
 
-My team is:
+####My team is:
 1. Leonaldo Pasaribu
 2. Leni Maya Sihombing
 #
