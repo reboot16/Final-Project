@@ -24,12 +24,14 @@ spi.open(0,0)
 pagi = "08:00:00"
 siang = "12:00:00"
 sore = "18:00:00"
+malam
 
 #Fungsi Menyimpan Data lahan Ke Database
 def saveDB(plantId ,humidity, temperature, pH, moisture):
     Time = dt.datetime.now()
+    kondisi = getLastKondisi(plantId)
     try:
-        cursor.execute("""INSERT INTO datalingkungan(idKondisi, waktuPencatatan, pH, kelembabanTanah, kelembabanUdara, suhu) VALUES(%s,%s,%s,%s,%s,%s)""",(1, Time, pH, moisture, humidity, temperature))
+        cursor.execute("""INSERT INTO datalingkungan(idKondisi, waktuPencatatan, pH, kelembabanTanah, kelembabanUdara, suhu) VALUES(%s,%s,%s,%s,%s,%s)""",(kondisi, Time, pH, moisture, humidity, temperature))
         db.commit()
         print("Air Humidity = ",humidity1,"% Air Temperature = ",temperature1," Mois = ", moisture1, "%  pH = ",pH1)
         print("Saved")
@@ -47,6 +49,14 @@ def CreateKondisi(zonaWaktu):
         except:
             db.rollback()
             print("Failed to create condition with id time zone is: ", zonaWaktu, " and plant Id is :", i+1)
+
+#Fungsi untuk mendapatkan data kondisi daun terakhir
+def getLastKondisi(idTanaman):
+    query = "SELECT idKondisi FROM kondisidaun WHERE idTanaman = %s ORDER BY idKondisi DESC"
+    plantId = (idTanaman,)
+    cursor.execute(query, plantId)
+    data = cursor.fetchone()
+    return data[0]
 
 #Fungsi Mengambil data tanah
 def analogInput(channel):
@@ -94,11 +104,11 @@ while True:
     pH3 = analogPH(2)
 
     if humidity1 is not None and temperature1 is not None:
-        #saveDB(1,humidity1,temperature1,pH1, moisture1)
-        #saveDB(2,humidity1,temperature1,pH2, moisture2)
-        #saveDB(3,humidity1,temperature1,pH3, moisture3)
-        print(moisture1)
-        sleep(3600)
+        saveDB(1,humidity1,temperature1,pH1, moisture1)
+        saveDB(2,humidity1,temperature1,pH2, moisture2)
+        saveDB(3,humidity1,temperature1,pH3, moisture3)
+        #print(moisture1)
+        sleep(60)
 
     else:
         print('Failed to get reading. Try again!')
